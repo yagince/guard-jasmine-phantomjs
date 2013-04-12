@@ -16,6 +16,9 @@ test/tmp
 test/version_tmp
 tmp
 
+#for bundler
+vendor/bundle
+
 #for rvm
 .ruby-version
 
