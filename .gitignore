@@ -18,3 +18,6 @@ tmp
 
 #for rvm
 .ruby-version
+
+#for mac
+.DS_Store
