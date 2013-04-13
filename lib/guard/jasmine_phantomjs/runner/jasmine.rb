@@ -11,11 +11,11 @@ module Guard
         end
 
         def run(file_paths)
-          @spec_runner.run(file_paths)
+          [@spec_runner.run(file_paths)]
         end
 
         def run_all
-          @spec_runner.run_all
+          [@spec_runner.run_all]
         end
       end
     end

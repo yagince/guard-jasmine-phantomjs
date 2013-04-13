@@ -9,12 +9,12 @@ module Guard
           @compiler = Compiler::TypeScript.new(config)
         end
 
-        def run(file_path)
-          @compiler.compile(file_path)
+        def run(file_paths)
+          file_paths.map{|path| @compiler.compile(path) }
         end
 
         def run_all
-          Dir.glob(file_pattern).each{|file| @compiler.compile(file) }
+          Dir.glob(file_pattern).map{|file| @compiler.compile(file) }
         end
 
         private
