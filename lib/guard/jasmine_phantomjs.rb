@@ -27,6 +27,7 @@ module Guard
 
     # 起動時に実行される
     def start
+      ::Guard::UI.info "start jasmine-phantomjs."
       @compile_runner.run_all
     end
 
@@ -38,8 +39,11 @@ module Guard
 
     # Enter押下時に実行される
     def run_all
+      ::Guard::UI.info "start jasmine-phantomjs run_all ."
       compile_results = @compile_runner.run_all
+      ::Guard::UI.info "scripts compile finished ."
       @jasmine_runner.run_all unless compile_error?(compile_results)
+      ::Guard::UI.info "ru_all finished ."
     end
 
     private

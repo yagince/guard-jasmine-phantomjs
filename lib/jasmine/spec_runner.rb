@@ -20,7 +20,7 @@ module Jasmine
     end
 
     def run_all
-      generate_spec_runner_html(Dir.glob("#{@config[:spec_dir]}/**/*.js"))
+      generate_spec_runner_html(Dir.glob("#{@config.spec_dir}/**/*.js"))
       run_phantomjs
     end
 
