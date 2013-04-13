@@ -9,6 +9,7 @@ require 'guard/watcher'
 module Guard
   class JasminePhantomjs < Guard
     require "guard/jasmine_phantomjs/runner/typescript"
+    require "guard/jasmine_phantomjs/runner/jasmine"
 
     DEFAULT_OPTIONS = {
       compile: :typescript,
@@ -21,6 +22,7 @@ module Guard
       super(watchers, check_compile_option(options))
       @config = YAML.load_file(options.config)
       @compile_runner = compile_runner(@config.merge(options))
+      @jasmine_runner = Runner::Jasmine.new(@config)
     end
 
     # 起動時に実行される
@@ -31,6 +33,7 @@ module Guard
     # ファイル変更・追加・削除時に実行される
     def run_on_changes(paths)
       paths.each{|path| @compile_runner.run(path) }
+      @jasmine_runner.run(paths)
     end
 
     private

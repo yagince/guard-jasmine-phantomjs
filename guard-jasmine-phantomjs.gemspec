@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard", ">= 1.7.0"
   spec.add_development_dependency "childprocess"
   spec.add_development_dependency "typescript"
+  spec.add_development_dependency "phantomjs.rb"
 end

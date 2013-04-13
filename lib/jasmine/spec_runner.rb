@@ -1,15 +1,27 @@
 require 'erb'
 require 'fileutils'
-require "guard/extention/hash"
+require 'guard/extention/hash'
+require 'phantomjs'
 
 module Jasmine
   class SpecRunner
     SPEC_RUNNER_HTML_NAME = "SpecRunner.html"
     SPEC_RUNNER_TEMPLATE = File.read("#{File.expand_path(File.dirname(__FILE__))}/#{SPEC_RUNNER_HTML_NAME}.erb")
+    RUN_JASMINE_SCRIPT = "run-jasmine-incomplete.coffee"
 
     def initialize(config)
       @config = config
       @template = ERB.new(SPEC_RUNNER_TEMPLATE)
+    end
+
+    def run(paths)
+      generate_spec_runner_html(paths)
+      run_phantomjs
+    end
+
+    def run_all
+      generate_spec_runner_html(Dir.glob("#{@config[:spec_dir]}/**/*.js"))
+      run_phantomjs
     end
 
     def generate_spec_runner_html(paths)
@@ -57,6 +69,10 @@ module Jasmine
         end
         acc
       }
+    end
+
+    def run_phantomjs
+      Phantomjs.run("#{current_dir}/#{RUN_JASMINE_SCRIPT}", "#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}")
     end
 
     def current_dir

@@ -29,12 +29,23 @@ describe Guard::JasminePhantomjs do
       let(:path1){"hoge"}
       let(:path2){"foo"}
       let(:paths){[path1, path2]}
+      let(:compile_runner){ double("compile_runner") }
+      let(:jasmine_runner){ double("jasmine_runner") }
+
+      before do
+        Guard::JasminePhantomjs::Runner::TypeScript.stub(:new){ compile_runner }
+        Guard::JasminePhantomjs::Runner::Jasmine.stub(:new){ jasmine_runner }
+      end
 
       it "変更対象のファイルがコンパイルされる" do
-        runner = double("compile_runner")
-        Guard::JasminePhantomjs::Runner::TypeScript.stub(:new){ runner }
-        runner.should_receive(:run).with(path1)
-        runner.should_receive(:run).with(path2)
+        jasmine_runner.stub(:run){}
+        compile_runner.should_receive(:run).with(path1)
+        compile_runner.should_receive(:run).with(path2)
+        default_guard.run_on_changes(paths)
+      end
+      it "変更対象のファイルのspecを実行する" do
+        compile_runner.stub(:run){}
+        jasmine_runner.should_receive(:run).with(paths)
         default_guard.run_on_changes(paths)
       end
     end
