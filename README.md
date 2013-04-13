@@ -1,24 +1,34 @@
-# Guard::Jasmine::Phantomjs
+# Guard::JasminePhantomjs
 
-TODO: Write a gem description
+For the project to develop a javascript library with TDD(Jasmine)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
+    gem 'guard'
     gem 'guard-jasmine-phantomjs'
+
+And then init:
+
+    $ bundle exec guard init jasmine_phantomjs
 
 And then execute:
 
-    $ bundle
+    $ bundle exec guard
 
 Or install it yourself as:
 
-    $ gem install guard-jasmine-phantomjs
+    $ gem install guard guard-jasmine-phantomjs
 
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration
+
+config/jasmine-phantomjs.yml
+
+    src_dir: 'src' # main source directory path
+    spec_dir: 'spec' # jasmine's spec directory path
 
 ## Contributing
 

@@ -12,7 +12,7 @@ module Guard
 
     DEFAULT_OPTIONS = {
       compile: :typescript,
-      config: 'config/jasmine.yml',
+      config: 'config/jasmine_phantomjs.yml',
       any_return: false
     }
 

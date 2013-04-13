@@ -3,7 +3,7 @@ require 'yaml'
 require 'spec_helper'
 
 describe Guard::JasminePhantomjs do
-  let(:config) { YAML.load_file('config/jasmine.yml') }
+  let(:config) { YAML.load_file('config/jasmine_phantomjs.yml') }
   let(:default_guard) { Guard::JasminePhantomjs.new }
   let(:guard) { Guard::JasminePhantomjs.new([], { compile: :coffee }) }
   let(:invalid_option_guard) { Guard::JasminePhantomjs.new([], { compile: :hoge }) }
