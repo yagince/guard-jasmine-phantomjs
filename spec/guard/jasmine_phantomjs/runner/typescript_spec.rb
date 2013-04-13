@@ -16,8 +16,8 @@ describe Guard::JasminePhantomjs::Runner::TypeScript do
   describe "#run" do
     it "指定したパスのtsファイルをコンパイルする" do
       compiler = double("Compiler::TypeScript")
-      Compiler::TypeScript.should_receive(:new).with(path).and_return(compiler)
-      compiler.should_receive(:compile).once.and_return(result)
+      Compiler::TypeScript.should_receive(:new).with(config).and_return(compiler)
+      compiler.should_receive(:compile).with(path).once.and_return(result)
       expect(runner.run(path)).to eq(result)
     end
   end

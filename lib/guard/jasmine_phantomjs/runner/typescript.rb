@@ -6,14 +6,15 @@ module Guard
       class TypeScript
         def initialize(config)
           @config = config
+          @compiler = Compiler::TypeScript.new(config)
         end
 
-        def run(path)
-          Compiler::TypeScript.new(path).compile
+        def run(file_path)
+          @compiler.compile(file_path)
         end
 
         def run_all
-          Dir.glob(file_pattern).each{|file| Compiler::TypeScript.new(file).compile }
+          Dir.glob(file_pattern).each{|file| @compiler.compile(file) }
         end
 
         private

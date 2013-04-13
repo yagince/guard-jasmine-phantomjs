@@ -1,22 +1,10 @@
 module Compiler
   class Compiler
-    def initialize(file, option={})
-      @file = file
+    def initialize(option={})
       @option = option
     end
-    def compile
+    def compile(file_path)
       raise NotImplementedError, 'plese implement #compile'
-    end
-  end
-  class StdOutBuffer
-    def initialize
-      @buf = []
-    end
-    def write(data)
-      buf << data
-    end
-    def message
-      @buf.dup
     end
   end
 end
