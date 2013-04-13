@@ -5,7 +5,7 @@ require 'guard/jasmine_phantomjs/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "guard-jasmine-phantomjs"
-  spec.version       = Guard::JasminePhantomjs::VERSION
+  spec.version       = Guard::JasminePhantomjsVersion::VERSION
   spec.authors       = ["yagince"]
   spec.email         = ["straitwalk@gmail.com"]
   spec.description   = %q{guard plugin for jasmine test}
@@ -21,4 +21,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "guard", ">= 1.7.0"
+  spec.add_development_dependency "childprocess"
+  spec.add_development_dependency "typescript"
 end

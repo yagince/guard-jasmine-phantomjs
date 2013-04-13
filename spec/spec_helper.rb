@@ -1,8 +1,11 @@
 require 'rubygems'
 require 'guard/jasmine_phantomjs'
 
-RSpec.configure do |config|
+current_dir = File.expand_path(File.dirname(__FILE__))
+Dir.glob("#{current_dir}/../lib/**/*.rb").each{|file| require file }
 
+RSpec.configure do |config|
+  
   config.color_enabled = true
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
@@ -22,4 +25,9 @@ RSpec.configure do |config|
   config.after(:each) do
     ENV['GUARD_ENV'] = nil
   end
+end
+
+
+def delete_by_pattern(pattern)
+  Dir.glob(pattern).each{|file| File.delete(file) if File.exist?(file) }
 end

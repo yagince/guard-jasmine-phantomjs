@@ -1,5 +1,5 @@
 module Guard
-  module JasminePhantomjs
+  module JasminePhantomjsVersion
     VERSION = "0.0.1"
   end
 end
