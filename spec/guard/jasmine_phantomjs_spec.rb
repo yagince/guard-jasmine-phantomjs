@@ -26,6 +26,7 @@ describe Guard::JasminePhantomjs do
     end
 
     describe "#run_on_changes" do
+      let(:success){{message: "", status: 0}}
       let(:path1){"hoge"}
       let(:path2){"foo"}
       let(:paths){[path1, path2]}
@@ -39,14 +40,23 @@ describe Guard::JasminePhantomjs do
 
       it "変更対象のファイルがコンパイルされる" do
         jasmine_runner.stub(:run){}
-        compile_runner.should_receive(:run).with(path1)
-        compile_runner.should_receive(:run).with(path2)
+        compile_runner.should_receive(:run){success}.with(path1)
+        compile_runner.should_receive(:run){success}.with(path2)
         default_guard.run_on_changes(paths)
       end
-      it "変更対象のファイルのspecを実行する" do
-        compile_runner.stub(:run){}
-        jasmine_runner.should_receive(:run).with(paths)
-        default_guard.run_on_changes(paths)
+      context "コンパイル成功の場合" do 
+        it "変更対象のファイルのspecを実行する" do
+          compile_runner.stub(:run){success}
+          jasmine_runner.should_receive(:run).with(paths)
+          default_guard.run_on_changes(paths)
+        end
+      end
+      context "コンパイルエラーの場合" do 
+        it "変更対象のファイルのspecは実行されない" do
+          compile_runner.should_receive(:run){{status: :error}}.at_least(:once)
+          jasmine_runner.should_not_receive(:run)
+          default_guard.run_on_changes(paths)
+        end
       end
     end
   end

@@ -32,8 +32,14 @@ module Guard
 
     # ファイル変更・追加・削除時に実行される
     def run_on_changes(paths)
-      paths.each{|path| @compile_runner.run(path) }
-      @jasmine_runner.run(paths)
+      compile_results = paths.map{|path| @compile_runner.run(path) }
+      @jasmine_runner.run(paths) unless compile_error?(compile_results)
+    end
+
+    # Enter押下時に実行される
+    def run_all
+      compile_results = @compile_runner.run_all
+      @jasmine_runner.run_all unless compile_error?(compile_results)
     end
 
     private
@@ -63,15 +69,8 @@ module Guard
         Runner::TypeScript.new(config)
       end
     end
+    def compile_error?(results)
+      results.map{|result| result.status}.include?(:error)      
+    end
   end
 end
-
-
-
-
-
-
-
-
-
-
