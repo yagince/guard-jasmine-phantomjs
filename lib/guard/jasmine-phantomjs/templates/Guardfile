@@ -1,4 +1,4 @@
-guard :jasmin_phatomjs, compile: :typescript do
+guard :jasmine_phantomjs, compile: :typescript do
   watch(%r{src/(.+?)\.ts$})
   watch(%r{spec/(.+?)\Spec.js$}){|m| "src/#{m[1]}.js" }
 end
