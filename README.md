@@ -7,7 +7,7 @@ For the project to develop a javascript library with TDD(Jasmine)
 Add this line to your application's Gemfile:
 
     gem 'guard'
-    gem 'guard-jasmine-phantomjs'
+    gem 'guard-jasmine-phantomjs', :git => 'git://github.com/yagince/guard-jasmine-phantomjs.git'
 
 And then init:
 
@@ -17,18 +17,35 @@ And then execute:
 
     $ bundle exec guard
 
-Or install it yourself as:
-
-    $ gem install guard guard-jasmine-phantomjs
-
 ## Usage
 
 ### Configuration
 
-config/jasmine-phantomjs.yml
+`config/jasmine-phantomjs.yml`
 
+    jasmine_version: '1.3.1' # your jasmine version
     src_dir: 'src' # main source directory path
     spec_dir: 'spec' # jasmine's spec directory path
+
+`Guardfile`'s sample
+
+    guard :jasmine_phantomjs, compile: :typescript do
+      watch(%r{^src\/(.+?)\.ts$})
+      watch(%r{^spec/(.+?)\Spec.js$}){|m| "src/#{m[1]}.ts" }
+    end
+
+`guard` options
+
+- compile
+    - :typescript
+    - :coffee # TODO
+
+### Run
+
+in your `terminal`
+
+    $ bundle exec guard
+    
 
 ## Contributing
 
