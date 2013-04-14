@@ -29,18 +29,22 @@ module Jasmine
       copy_css(@config.spec_dir, @config.jasmine_version)
 
       source_paths = Dir.glob("#{@config.src_dir}/**/*.js")
-      spec_paths = paths
+      spec_paths = paths.map{|path| to_spec(path) }
       open("#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}", "w"){|file| file.write(@template.result(binding)) }
     end
 
     private
     JS_EXTENTION = ".js"
+    SPEC = "Spec.js"
     EXTENTION_REGEX = /.+(\..+$)/
     JASMINE_LIBS = ['jasmine.js', 'jasmine-html.js']
     JASMINE_CSS = 'jasmine.css'
 
     def to_js(path)
       path.end_with?(JS_EXTENTION) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, JS_EXTENTION)
+    end
+    def to_spec(path)
+      path.end_with?(SPEC) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, SPEC)
     end
 
     def copy_libs(spec_dir, version)

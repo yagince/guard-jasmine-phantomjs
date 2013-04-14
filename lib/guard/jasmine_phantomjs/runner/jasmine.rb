@@ -11,11 +11,21 @@ module Guard
         end
 
         def run(file_paths)
-          [@spec_runner.run(file_paths)]
+          ::Guard::UI.info "Start jasmine."
+          notify([@spec_runner.run(file_paths)])
         end
 
         def run_all
-          [@spec_runner.run_all]
+          ::Guard::UI.info "Start jasmine."
+          notify([@spec_runner.run_all])
+        end
+
+        private
+        def notify(results)
+          ::Guard::UI.info "Jasmine result."
+          Notifier.notify results[0] 
+          puts results[0] + "\n"
+          results
         end
       end
     end

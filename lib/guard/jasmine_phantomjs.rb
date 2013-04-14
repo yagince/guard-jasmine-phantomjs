@@ -27,23 +27,34 @@ module Guard
 
     # 起動時に実行される
     def start
-      ::Guard::UI.info "start jasmine-phantomjs."
+      ::Guard::UI.info "Start jasmine-phantomjs."
       @compile_runner.run_all
     end
 
     # ファイル変更・追加・削除時に実行される
     def run_on_changes(paths)
-      compile_results = paths.map{|path| @compile_runner.run(path) }
+      ::Guard::UI.info "Start compile #{paths}"
+      compile_results = @compile_runner.run(paths)
+      ::Guard::UI.info "Start compile finished."
       @jasmine_runner.run(paths) unless compile_error?(compile_results)
     end
 
     # Enter押下時に実行される
     def run_all
-      ::Guard::UI.info "start jasmine-phantomjs run_all ."
+      ::Guard::UI.info "Start jasmine-phantomjs run_all ."
       compile_results = @compile_runner.run_all
       ::Guard::UI.info "scripts compile finished ."
       @jasmine_runner.run_all unless compile_error?(compile_results)
-      ::Guard::UI.info "ru_all finished ."
+      ::Guard::UI.info "run_all finished ."
+    end
+
+    # Gets called when the Guard should reload itself.
+    #
+    # @raise [:task_has_failed] when run_on_change has failed
+    #
+    def reload
+      ::Guard::UI.info "Start jasmine-phantomjs reload."
+      start
     end
 
     private

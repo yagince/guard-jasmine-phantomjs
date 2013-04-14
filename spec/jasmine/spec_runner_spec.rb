@@ -17,6 +17,9 @@ describe Jasmine::SpecRunner do
   let(:lib_dir) { "#{config.spec_dir}/lib" }
 
   describe "#generate_spec_runner_html" do
+    def to_spec(path)
+      path.end_with?("Spec.js") ? path : path.sub(path.match(/.+(\..+$)/){|m| m[1]}, "Spec.js")
+    end
     after do
       delete_by_pattern(dest_spec_runner)
       FileUtils.remove_dir(lib_dir, true) if Dir.exist?(lib_dir)
@@ -26,8 +29,8 @@ describe Jasmine::SpecRunner do
       spec_runner.generate_spec_runner_html(targets)
       expect(File.exist?(dest_spec_runner)).to be_true
       result = File.read(dest_spec_runner)
-      expect(result).to match(/#{targets[0]}/)
-      expect(result).to match(/#{targets[1]}/)
+      expect(result).to match(/#{to_spec(targets[0]).sub(config[:spec_dir], ".")}/)
+      expect(result).to match(/#{to_spec(targets[1]).sub(config[:spec_dir], ".")}/)
     end
     it "jasmineのライブラリーが存在しない場合はSpecRunner生成先にコピーする" do
       expect(Dir.exists?(lib_dir)).to be_false
