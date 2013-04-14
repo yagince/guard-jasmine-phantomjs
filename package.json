@@ -1,0 +1,9 @@
+{
+    "author" : "yagince",
+    "name" : "guard-jasmine-phantomjs",
+    "description" : "jasmine phantomjs",
+    "version" : "0.0.1",
+    "dependencies" : {
+        "typescript" : ">= 0.8.0"
+    }
+}

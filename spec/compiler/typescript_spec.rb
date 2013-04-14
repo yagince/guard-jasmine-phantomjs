@@ -2,9 +2,9 @@
 require 'spec_helper'
 
 describe Compiler::TypeScript do
-  let(:ts_file) { "spec/data/sample.ts" }
-  let(:invalid_ts_file) { "spec/data/invalid-sample.ts" }
-  let(:js_file) { "spec/data/sample.js" }
+  let(:ts_file) { "./spec/data/sample.ts" }
+  let(:invalid_ts_file) { "./spec/data/invalid-sample.ts" }
+  let(:js_file) { "./spec/data/sample.js" }
   let(:compiler) { Compiler::TypeScript.new(ts_file) }
 
   describe "#compile" do

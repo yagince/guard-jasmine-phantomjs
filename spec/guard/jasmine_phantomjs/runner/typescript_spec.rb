@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe Guard::JasminePhantomjs::Runner::TypeScript do
-  let(:src_dir){ "spec/data/src" }
+  let(:src_dir){ "./spec/data/src" }
   let(:config){ {src_dir: src_dir} }
   let(:path){ "hoge/foo/bar" }
   let(:result){ {message: "hoge", status: :success} }
