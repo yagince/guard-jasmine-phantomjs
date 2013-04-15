@@ -33,7 +33,9 @@ module Guard
     # 起動時に実行される
     def start
       ::Guard::UI.info "Start jasmine-phantomjs."
+      ::Guard::UI.info "Start all script compile"
       @compile_runner.run_all
+      ::Guard::UI.info "scripts compile finished."
     end
 
     # ファイル変更・追加・削除時に実行される
@@ -46,11 +48,12 @@ module Guard
 
     # Enter押下時に実行される
     def run_all
-      ::Guard::UI.info "Start jasmine-phantomjs run_all ."
+      ::Guard::UI.info "Start jasmine-phantomjs run_all."
+      ::Guard::UI.info "Start all script compile"
       compile_results = @compile_runner.run_all
-      ::Guard::UI.info "scripts compile finished ."
+      ::Guard::UI.info "scripts compile finished."
       @jasmine_runner.run_all unless compile_error?(compile_results)
-      ::Guard::UI.info "run_all finished ."
+      ::Guard::UI.info "run_all finished."
     end
 
     # Gets called when the Guard should reload itself.
