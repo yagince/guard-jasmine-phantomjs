@@ -1,4 +1,12 @@
-guard :jasmine_phantomjs, compile: :typescript do
+guard :jasmine_phantomjs, {
+  compile: :typescript
+  src_dir: 'src',
+  spec_dir: 'spec',
+  jasmine_version: '1.3.1',
+  phantomjs: :gem
+  # , out: 'src/all.js'
+  # , root_script: 'src/root.ts'
+} do
   watch(%r{src/(.+?)\.ts$})
-  watch(%r{spec/(.+?)\Spec.js$}){|m| "src/#{m[1]}.js" }
+  watch(%r{spec/(.+?)\Spec.js$}){|m| "src/#{m[1]}.ts" }
 end
