@@ -15,13 +15,11 @@ module Jasmine
     end
 
     def run(paths)
-      generate_spec_runner_html(paths)
-      run_phantomjs
+      run_phantomjs if generate_spec_runner_html(paths)
     end
 
     def run_all
-      generate_spec_runner_html(Dir.glob("#{@config.spec_dir}/**/*.js"))
-      run_phantomjs
+      run_phantomjs if generate_spec_runner_html(Dir.glob("#{@config.spec_dir}/**/*.js"))
     end
 
     def generate_spec_runner_html(paths)
@@ -33,7 +31,12 @@ module Jasmine
         spec_path = to_spec(path)
         spec_path if File.exist?(spec_path)
       }.compact
-      open("#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}", "w"){|file| file.write(@template.result(binding)) }
+      unless spec_paths.empty?
+        open("#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}", "w"){|file| file.write(@template.result(binding)) }
+        true
+      else
+        false
+      end
     end
 
     private
