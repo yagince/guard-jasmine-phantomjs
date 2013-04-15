@@ -1,0 +1,10 @@
+language:
+  - ruby
+
+node_js:
+  - 0.10
+
+before_script:
+  - npm install -g
+  - ls -al /home/travis/.nvm/v0.8.22/lib/node_modules/guard-jasmine-phantomjs
+  - tsc -v

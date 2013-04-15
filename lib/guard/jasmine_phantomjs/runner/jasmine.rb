@@ -24,7 +24,7 @@ module Guard
         def notify(results)
           ::Guard::UI.info "Jasmine result."
           Notifier.notify results[0] 
-          puts results[0] + "\n"
+          puts results[0] + "\n" if results[0]
           results
         end
       end
