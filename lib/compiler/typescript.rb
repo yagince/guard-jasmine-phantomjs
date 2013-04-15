@@ -14,9 +14,24 @@ module Compiler
     private
     def compile_with_child_process(file_path)
       io_in, io_out = IO.pipe
-      Process.waitpid(spawn("tsc #{file_path}", [:out, :err] => io_out))
+      Process.waitpid(spawn(build_command(file_path), [:out, :err] => io_out))
       io_out.close
       {message: io_in.read, status: $?.exitstatus.zero? ? :success : :error}
+    end
+    def build_command(file_path)
+      command = "tsc "
+      command << case @options[:root_script]
+                 when String
+                   "#{@options.root_script} "
+                 else
+                   "#{file_path} "
+                 end
+      command << case @options[:out]
+                 when String
+                   "--out #{@options.out}"
+                 else
+                   ""
+                 end
     end
 
     def compile_with_gem(file_path)
