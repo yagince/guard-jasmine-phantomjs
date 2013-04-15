@@ -14,21 +14,28 @@ module Guard
     DEFAULT_OPTIONS = {
       compile: :typescript,
       config: 'config/jasmine_phantomjs.yml',
-      any_return: false
+      any_return: false,
+      jasmine_version: "1.3.1",
+      'src_dir' => "src",
+      'spec_dir' => "spec",
+      phantomjs: :gem
     }
 
     def initialize(watchers = [], options = {})
       options = DEFAULT_OPTIONS.merge(options)
+      options = YAML.load_file(options.config).merge(options) if File.exist?(options.config)
       super(watchers, check_compile_option(options))
-      @config = YAML.load_file(options.config)
-      @compile_runner = compile_runner(@config.merge(options))
+      @config = options
+      @compile_runner = compile_runner(@config)
       @jasmine_runner = Runner::Jasmine.new(@config)
     end
 
     # 起動時に実行される
     def start
       ::Guard::UI.info "Start jasmine-phantomjs."
+      ::Guard::UI.info "Start all script compile"
       @compile_runner.run_all
+      ::Guard::UI.info "scripts compile finished."
     end
 
     # ファイル変更・追加・削除時に実行される
@@ -41,11 +48,12 @@ module Guard
 
     # Enter押下時に実行される
     def run_all
-      ::Guard::UI.info "Start jasmine-phantomjs run_all ."
+      ::Guard::UI.info "Start jasmine-phantomjs run_all."
+      ::Guard::UI.info "Start all script compile"
       compile_results = @compile_runner.run_all
-      ::Guard::UI.info "scripts compile finished ."
+      ::Guard::UI.info "scripts compile finished."
       @jasmine_runner.run_all unless compile_error?(compile_results)
-      ::Guard::UI.info "run_all finished ."
+      ::Guard::UI.info "run_all finished."
     end
 
     # Gets called when the Guard should reload itself.

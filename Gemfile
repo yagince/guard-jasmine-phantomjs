@@ -5,3 +5,6 @@ gemspec
 
 gem 'rb-fsevent'
 gem 'guard-rspec'
+
+gem 'rake', :require => false
+gem 'rspec', :require => false

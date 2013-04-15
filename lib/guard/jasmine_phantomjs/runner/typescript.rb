@@ -14,7 +14,12 @@ module Guard
         end
 
         def run_all
-          notify(Dir.glob(file_pattern).map{|file| @compiler.compile(file) })
+          case @config[:root_script]
+          when String
+            notify([@compiler.compile(@config.root_script)])
+          else
+            notify(Dir.glob(file_pattern).map{|file| @compiler.compile(file) })
+          end
         end
 
         private
