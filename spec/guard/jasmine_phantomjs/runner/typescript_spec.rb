@@ -28,5 +28,17 @@ describe Guard::JasminePhantomjs::Runner::TypeScript do
       runner.run_all
       Dir.glob("#{src_dir}/**/*.ts").each{|file| expect(File.exists?(file.sub('.ts','.js'))).to be_true }
     end
+
+    context "root_scriptオプションが指定されている場合" do
+      before do
+        config.merge!({root_script: path})
+      end
+      it "root_scriptで指定されたファイルのみをコンパイルする" do
+        compiler = double("Compiler::TypeScript")
+        Compiler::TypeScript.should_receive(:new).with(config).and_return(compiler)
+        compiler.should_receive(:compile).with(path).once.and_return(result)
+        expect(runner.run_all[0]).to eq(result)
+      end
+    end
   end
 end
