@@ -47,23 +47,27 @@ describe Jasmine::SpecRunner do
         expect(result).not_to match(/#{to_spec(targets[2]).sub(config[:src_dir], ".")}/)
       end
     end
-    it "jasmineのライブラリーが存在しない場合はSpecRunner生成先にコピーする" do
-      expect(Dir.exists?(lib_dir)).to be_false
-      spec_runner.generate_spec_runner_html(targets)
-      expect(Dir.exists?(lib_dir)).to be_true
-      expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine.js")).to be_true
-      expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine-html.js")).to be_true
-      result = File.read(dest_spec_runner)
-      expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine.js/)
-      expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine-html.js/)
+    context "jasmineのライブラリーが存在しない場合" do 
+      it "SpecRunner生成先にライブラリーをコピーする" do
+        expect(Dir.exists?(lib_dir)).to be_false
+        spec_runner.generate_spec_runner_html(targets)
+        expect(Dir.exists?(lib_dir)).to be_true
+        expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine.js")).to be_true
+        expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine-html.js")).to be_true
+        result = File.read(dest_spec_runner)
+        expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine.js/)
+        expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine-html.js/)
+      end
     end
-    it "jasmineのCSSが存在しない場合はSpecRunner生成先にコピーする" do
-      expect(Dir.exists?(lib_dir)).to be_false
-      spec_runner.generate_spec_runner_html(targets)
-      expect(Dir.exists?(lib_dir)).to be_true
-      expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine.css")).to be_true
-      result = File.read(dest_spec_runner)
-      expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine.css/)
+    context "jasmineのCSSが存在しない場合" do 
+      it "SpecRunner生成先にコピーする" do
+        expect(Dir.exists?(lib_dir)).to be_false
+        spec_runner.generate_spec_runner_html(targets)
+        expect(Dir.exists?(lib_dir)).to be_true
+        expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine.css")).to be_true
+        result = File.read(dest_spec_runner)
+        expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine.css/)
+      end
     end
   end
 
