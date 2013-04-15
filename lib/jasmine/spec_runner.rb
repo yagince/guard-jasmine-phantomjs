@@ -76,7 +76,12 @@ module Jasmine
     end
 
     def run_phantomjs
-      Phantomjs.run("#{current_dir}/#{RUN_JASMINE_SCRIPT}", "#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}")
+      case @config.phantomjs.to_sym
+      when :gem
+        Phantomjs.run("#{current_dir}/#{RUN_JASMINE_SCRIPT}", "#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}")
+      when :native
+        `phantomjs #{current_dir}/#{RUN_JASMINE_SCRIPT} #{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}`
+      end
     end
 
     def current_dir

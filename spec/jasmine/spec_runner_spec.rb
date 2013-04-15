@@ -8,7 +8,8 @@ describe Jasmine::SpecRunner do
     {
       src_dir: 'spec/data/src',
       spec_dir: 'spec/data/spec',
-      jasmine_version: '1.3.1'
+      jasmine_version: '1.3.1',
+      phantomjs: :gem
     }
   }
   let(:spec_runner){ Jasmine::SpecRunner.new(config) }
@@ -57,11 +58,25 @@ describe Jasmine::SpecRunner do
       spec_runner.should_receive(:generate_spec_runner_html){}.with(targets)
       spec_runner.run(targets)
     end
-
-    it "phantomjsでspecを実行する" do
-      spec_runner.stub(:generate_spec_runner_html){}
-      Phantomjs.should_receive(:run).with(anything, "#{config[:spec_dir]}/SpecRunner.html")
-      spec_runner.run(targets)
+    context "gemでPhantomJsを実行する場合" do
+      before do
+        config.merge!(phantomjs: :gem)
+      end
+      it "phantomjsでspecを実行する" do
+        spec_runner.stub(:generate_spec_runner_html){}
+        Phantomjs.should_receive(:run).with(anything, "#{config[:spec_dir]}/SpecRunner.html")
+        spec_runner.run(targets)
+      end
+    end
+    context "nativeでPhantomJsを実行する場合" do
+      before do
+        config.merge!(phantomjs: :native )
+      end
+      it "phantomjsでspecを実行する" do
+        spec_runner.stub(:generate_spec_runner_html){}
+        Phantomjs.should_not_receive(:run)
+        spec_runner.run(targets)
+      end
     end
   end
   describe "#run_all" do
