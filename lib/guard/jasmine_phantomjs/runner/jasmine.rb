@@ -16,15 +16,17 @@ module Guard
         end
 
         def run_all
-          ::Guard::UI.info "Start jasmine."
+          ::Guard::UI.info "Start jasmine.(run_all)"
           notify([@spec_runner.run_all])
         end
 
         private
         def notify(results)
-          ::Guard::UI.info "Jasmine result."
-          Notifier.notify results[0] 
-          puts results[0] + "\n" if results[0]
+          results.compact.each{|result|
+            ::Guard::UI.info "Jasmine execute result."
+            Notifier.notify result 
+            puts results[0] + "\n" if result
+          }
           results
         end
       end
