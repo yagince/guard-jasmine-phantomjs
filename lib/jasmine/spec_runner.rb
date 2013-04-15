@@ -15,13 +15,11 @@ module Jasmine
     end
 
     def run(paths)
-      generate_spec_runner_html(paths)
-      run_phantomjs
+      run_phantomjs if generate_spec_runner_html(paths)
     end
 
     def run_all
-      generate_spec_runner_html(Dir.glob("#{@config.spec_dir}/**/*.js"))
-      run_phantomjs
+      run_phantomjs if generate_spec_runner_html(Dir.glob("#{@config.spec_dir}/**/*.js"))
     end
 
     def generate_spec_runner_html(paths)
@@ -29,8 +27,16 @@ module Jasmine
       copy_css(@config.spec_dir, @config.jasmine_version)
 
       source_paths = Dir.glob("#{@config.src_dir}/**/*.js")
-      spec_paths = paths.map{|path| to_spec(path) }
-      open("#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}", "w"){|file| file.write(@template.result(binding)) }
+      spec_paths = paths.map{|path|
+        spec_path = to_spec(path)
+        spec_path if File.exist?(spec_path)
+      }.compact
+      unless spec_paths.empty?
+        open("#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}", "w"){|file| file.write(@template.result(binding)) }
+        true
+      else
+        false
+      end
     end
 
     private
@@ -44,7 +50,8 @@ module Jasmine
       path.end_with?(JS_EXTENTION) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, JS_EXTENTION)
     end
     def to_spec(path)
-      path.end_with?(SPEC) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, SPEC)
+      spec_path = path.end_with?(SPEC) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, SPEC)
+      spec_path.sub(@config.src_dir, @config.spec_dir)
     end
 
     def copy_libs(spec_dir, version)
