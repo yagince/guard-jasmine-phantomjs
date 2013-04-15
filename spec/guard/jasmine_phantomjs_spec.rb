@@ -3,10 +3,17 @@ require 'yaml'
 require 'spec_helper'
 
 describe Guard::JasminePhantomjs do
-  let(:config) { YAML.load_file('config/jasmine_phantomjs.yml') }
-  let(:default_guard) { Guard::JasminePhantomjs.new }
-  let(:guard) { Guard::JasminePhantomjs.new([], { compile: :coffee }) }
-  let(:invalid_option_guard) { Guard::JasminePhantomjs.new([], { compile: :hoge }) }
+  let(:config){
+    {
+      'src_dir' => 'spec/data/src',
+      'spec_dir' => 'spec/data/spec',
+      jasmine_version: '1.3.1',
+      phantomjs: :gem
+    }
+  }
+  let(:default_guard) { Guard::JasminePhantomjs.new([], config) }
+  let(:guard) { Guard::JasminePhantomjs.new([], config.merge({ compile: :coffee })) }
+  let(:invalid_option_guard) { Guard::JasminePhantomjs.new([], config.merge({compile: :hoge})) }
   
   context "デフォルト設定時" do
     describe ":compile option" do

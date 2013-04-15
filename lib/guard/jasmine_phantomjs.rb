@@ -14,14 +14,19 @@ module Guard
     DEFAULT_OPTIONS = {
       compile: :typescript,
       config: 'config/jasmine_phantomjs.yml',
-      any_return: false
+      any_return: false,
+      jasmine_version: "1.3.1",
+      'src_dir' => "src",
+      'spec_dir' => "spec",
+      phantomjs: :gem
     }
 
     def initialize(watchers = [], options = {})
       options = DEFAULT_OPTIONS.merge(options)
+      options = YAML.load_file(options.config).merge(options) if File.exist?(options.config)
       super(watchers, check_compile_option(options))
-      @config = YAML.load_file(options.config)
-      @compile_runner = compile_runner(@config.merge(options))
+      @config = options
+      @compile_runner = compile_runner(@config)
       @jasmine_runner = Runner::Jasmine.new(@config)
     end
 
