@@ -13,7 +13,7 @@ describe Jasmine::SpecRunner do
     }
   }
   let(:spec_runner){ Jasmine::SpecRunner.new(config) }
-  let(:targets) { ['spec/data/spec/hoge.ts', 'spec/data/spec/foo.js'] }
+  let(:targets) { ['spec/data/src/a.ts', 'spec/data/src/b/b.ts'] }
   let(:dest_spec_runner) { "#{config[:spec_dir]}/SpecRunner.html" }
   let(:lib_dir) { "#{config.spec_dir}/lib" }
 
@@ -26,12 +26,26 @@ describe Jasmine::SpecRunner do
       FileUtils.remove_dir(lib_dir, true) if Dir.exist?(lib_dir)
     end
 
-    it "指定したspecを実行するSpecRunner.htmlを生成する" do
+    it "指定したファイルのspecを実行するSpecRunner.htmlを生成する" do
       spec_runner.generate_spec_runner_html(targets)
       expect(File.exist?(dest_spec_runner)).to be_true
       result = File.read(dest_spec_runner)
-      expect(result).to match(/#{to_spec(targets[0]).sub(config[:spec_dir], ".")}/)
-      expect(result).to match(/#{to_spec(targets[1]).sub(config[:spec_dir], ".")}/)
+      expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
+      expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
+    end
+    context "指定したファイルのspecが存在しない場合" do
+      let(:not_exist_js){ 'spec/data/src/notExist.js'}
+      before do
+        targets << not_exist_js
+      end
+      it "存在するspecのみを実行するSpecRunner.htmlを生成する" do
+        spec_runner.generate_spec_runner_html(targets)
+        expect(File.exist?(dest_spec_runner)).to be_true
+        result = File.read(dest_spec_runner)
+        expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
+        expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
+        expect(result).not_to match(/#{to_spec(targets[2]).sub(config[:src_dir], ".")}/)
+      end
     end
     it "jasmineのライブラリーが存在しない場合はSpecRunner生成先にコピーする" do
       expect(Dir.exists?(lib_dir)).to be_false

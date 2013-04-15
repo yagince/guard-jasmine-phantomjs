@@ -29,7 +29,10 @@ module Jasmine
       copy_css(@config.spec_dir, @config.jasmine_version)
 
       source_paths = Dir.glob("#{@config.src_dir}/**/*.js")
-      spec_paths = paths.map{|path| to_spec(path) }
+      spec_paths = paths.map{|path|
+        spec_path = to_spec(path)
+        spec_path if File.exist?(spec_path)
+      }.compact
       open("#{@config.spec_dir}/#{SPEC_RUNNER_HTML_NAME}", "w"){|file| file.write(@template.result(binding)) }
     end
 
@@ -44,7 +47,8 @@ module Jasmine
       path.end_with?(JS_EXTENTION) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, JS_EXTENTION)
     end
     def to_spec(path)
-      path.end_with?(SPEC) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, SPEC)
+      spec_path = path.end_with?(SPEC) ? path : path.sub(path.match(EXTENTION_REGEX){|m| m[1]}, SPEC)
+      spec_path.sub(@config.src_dir, @config.spec_dir)
     end
 
     def copy_libs(spec_dir, version)
