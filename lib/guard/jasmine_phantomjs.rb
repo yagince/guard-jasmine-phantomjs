@@ -18,7 +18,8 @@ module Guard
       jasmine_version: "1.3.1",
       'src_dir' => "src",
       'spec_dir' => "spec",
-      phantomjs: :gem
+      phantomjs: :gem,
+      reporter: :html
     }
 
     def initialize(watchers = [], options = {})
