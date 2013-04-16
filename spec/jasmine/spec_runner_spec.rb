@@ -42,7 +42,7 @@ describe Jasmine::SpecRunner do
       before do
         config.merge!({reporter: :phantomjs})
       end
-      it "指定したファイルのspecを実行し、shellのExitCodeを返すSpecRunner.htmlを生成する" do
+      it "指定したファイルのspecを実行し、JUnit形式のXMLを出力するSpecRunner.htmlを生成する" do
         expect(spec_runner.generate_spec_runner_html(targets)).to be_true
 
         expect(File.exist?(dest_spec_runner)).to be_true
@@ -50,6 +50,8 @@ describe Jasmine::SpecRunner do
         expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
         expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
         expect(result).to match(/new jasmine\.TrivialReporter\(\)/)
+        expect(result).to match(/new jasmine\.PhantomJSReporter\(\)/)
+        expect(result).to match(/lib\/jasmine-#{config[:jasmine_version]}\/jasmine\.phantomjs-reporter\.js/)
       end
     end
     context "reporterがHTMLでもPhantomJsでもない場合" do
@@ -96,6 +98,8 @@ describe Jasmine::SpecRunner do
         expect(Dir.exists?(lib_dir)).to be_true
         expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine.js")).to be_true
         expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine-html.js")).to be_true
+        expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine.phantomjs-reporter.js")).to be_true
+
         result = File.read(dest_spec_runner)
         expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine.js/)
         expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine-html.js/)
