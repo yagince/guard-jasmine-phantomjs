@@ -7,7 +7,9 @@
   <link rel="stylesheet" type="text/css" href="lib/jasmine-<%= @config.jasmine_version%>/jasmine.css">
   <script type="text/javascript" src="lib/jasmine-<%= @config.jasmine_version%>/jasmine.js"></script>
   <script type="text/javascript" src="lib/jasmine-<%= @config.jasmine_version%>/jasmine-html.js"></script>
-
+  <% if @config.reporter == :phantomjs %>
+  <script type="text/javascript" src="lib/jasmine-<%= @config.jasmine_version%>/jasmine.phantomjs-reporter.js"></script>
+  <% end %>
   <!-- include source files here... -->
   <% source_paths.each{|path| %>
   <script type="text/javascript" src="../<%= path %>"></script>
@@ -19,24 +21,16 @@
   <script type="text/javascript" src="<%= path.sub(/#{@config.spec_dir}|#{@config.src_dir}/,".") %>"></script>
   <% } %>
 
-  <script type="text/javascript">
+  <% if @config.reporter != :phantomjs %>
+  <script type="text/javascript" >
     (function() {
       var jasmineEnv = jasmine.getEnv();
       jasmineEnv.updateInterval = 1000;
-      <% if @config.reporter == :phantomjs %>
-        jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-        if(typeof jasmine.PhantomJSReporter === "function"){
-          jasmine.getEnv().addReporter(new jasmine.PhantomJSReporter());
-        }
-
-      <% else %>  
-        var htmlReporter = new jasmine.HtmlReporter();
-
-        jasmineEnv.addReporter(htmlReporter);
-        jasmineEnv.specFilter = function(spec) {
-          return htmlReporter.specFilter(spec);
-        };
-      <% end %>
+      var htmlReporter = new jasmine.HtmlReporter();
+      jasmineEnv.addReporter(htmlReporter);
+      jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+      };
 
       var currentWindowOnload = window.onload;
 
@@ -50,12 +44,20 @@
       function execJasmine() {
         jasmineEnv.execute();
       }
-
     })();
   </script>
+  <% end %>
 
 </head>
 
 <body>
+  <% if @config.reporter == :phantomjs %>
+    <script type="text/javascript">
+      jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+      jasmine.getEnv().addReporter(new jasmine.PhantomJSReporter());
+      jasmine.getEnv().execute();
+    </script>
+  <% end %>
+
 </body>
 </html>
