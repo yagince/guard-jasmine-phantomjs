@@ -43,7 +43,7 @@ module Jasmine
     JS_EXTENTION = ".js"
     SPEC = "Spec.js"
     EXTENTION_REGEX = /.+(\..+$)/
-    JASMINE_LIBS = ['jasmine.js', 'jasmine-html.js']
+    JASMINE_LIBS = ['jasmine.js', 'jasmine-html.js', 'jasmine.phantomjs-reporter.js']
     JASMINE_CSS = 'jasmine.css'
 
     def to_js(path)
