@@ -9,7 +9,8 @@ describe Jasmine::SpecRunner do
       src_dir: 'spec/data/src',
       spec_dir: 'spec/data/spec',
       jasmine_version: '1.3.1',
-      phantomjs: :gem
+      phantomjs: :native,
+      reporter: :html
     }
   }
   let(:spec_runner){ Jasmine::SpecRunner.new(config) }
@@ -26,15 +27,46 @@ describe Jasmine::SpecRunner do
       delete_by_pattern(dest_spec_runner)
       FileUtils.remove_dir(lib_dir, true) if Dir.exist?(lib_dir)
     end
+    context "reporterがHTMLの場合" do 
+      it "指定したファイルのspecを実行し、HTML形式の結果を出力するSpecRunner.htmlを生成する" do
+        expect(spec_runner.generate_spec_runner_html(targets)).to be_true
 
-    it "指定したファイルのspecを実行するSpecRunner.htmlを生成する" do
-      expect(spec_runner.generate_spec_runner_html(targets)).to be_true
-
-      expect(File.exist?(dest_spec_runner)).to be_true
-      result = File.read(dest_spec_runner)
-      expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
-      expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
+        expect(File.exist?(dest_spec_runner)).to be_true
+        result = File.read(dest_spec_runner)
+        expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
+        expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
+        expect(result).to match(/new jasmine\.HtmlReporter\(\)/)
+      end
     end
+    context "reporterがPhantomJsの場合" do
+      before do
+        config.merge!({reporter: :phantomjs})
+      end
+      it "指定したファイルのspecを実行し、shellのExitCodeを返すSpecRunner.htmlを生成する" do
+        expect(spec_runner.generate_spec_runner_html(targets)).to be_true
+
+        expect(File.exist?(dest_spec_runner)).to be_true
+        result = File.read(dest_spec_runner)
+        expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
+        expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
+        expect(result).to match(/new jasmine\.TrivialReporter\(\)/)
+      end
+    end
+    context "reporterがHTMLでもPhantomJsでもない場合" do
+      before do
+        config.merge!({reporter: :hoge})
+      end
+      it "repoterがHTMLの場合と同じ結果を出力する" do
+        expect(spec_runner.generate_spec_runner_html(targets)).to be_true
+
+        expect(File.exist?(dest_spec_runner)).to be_true
+        result = File.read(dest_spec_runner)
+        expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
+        expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
+        expect(result).to match(/new jasmine\.HtmlReporter\(\)/)
+      end
+    end
+
     context "指定したファイルのspecが存在しない場合" do
       before do
         targets << not_exist_js
@@ -110,7 +142,12 @@ describe Jasmine::SpecRunner do
   describe "#run_all" do
     let(:all_specs) { Dir.glob("#{config[:spec_dir]}/**/*.js") }
 
+    before do
+      config.merge!({phantomjs: :gem})
+    end
+
     it "全ファイルのspecを実行するSpecRunnerを生成する" do
+      Phantomjs.stub(:run)
       spec_runner.should_receive(:generate_spec_runner_html){true}.with(all_specs)
       spec_runner.run_all
     end

@@ -23,14 +23,20 @@
     (function() {
       var jasmineEnv = jasmine.getEnv();
       jasmineEnv.updateInterval = 1000;
+      <% if @config.reporter == :phantomjs %>
+        jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+        if(typeof jasmine.PhantomJSReporter === "function"){
+          jasmine.getEnv().addReporter(new jasmine.PhantomJSReporter());
+        }
 
-      var htmlReporter = new jasmine.HtmlReporter();
+      <% else %>  
+        var htmlReporter = new jasmine.HtmlReporter();
 
-      jasmineEnv.addReporter(htmlReporter);
-
-      jasmineEnv.specFilter = function(spec) {
-        return htmlReporter.specFilter(spec);
-      };
+        jasmineEnv.addReporter(htmlReporter);
+        jasmineEnv.specFilter = function(spec) {
+          return htmlReporter.specFilter(spec);
+        };
+      <% end %>
 
       var currentWindowOnload = window.onload;
 
