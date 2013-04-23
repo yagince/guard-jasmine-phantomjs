@@ -27,15 +27,20 @@ describe Jasmine::SpecRunner do
       delete_by_pattern(dest_spec_runner)
       FileUtils.remove_dir(lib_dir, true) if Dir.exist?(lib_dir)
     end
+
+    def spec_runner_should_match(regexs=[])
+      expect(spec_runner.generate_spec_runner_html(targets)).to be_true
+
+      expect(File.exist?(dest_spec_runner)).to be_true
+      result = File.read(dest_spec_runner)
+      expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
+      expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
+      regexs.each{|regex| expect(result).to match(regex) }
+    end
+
     context "reporterがHTMLの場合" do 
       it "指定したファイルのspecを実行し、HTML形式の結果を出力するSpecRunner.htmlを生成する" do
-        expect(spec_runner.generate_spec_runner_html(targets)).to be_true
-
-        expect(File.exist?(dest_spec_runner)).to be_true
-        result = File.read(dest_spec_runner)
-        expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
-        expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
-        expect(result).to match(/new jasmine\.HtmlReporter\(\)/)
+        spec_runner_should_match([/new jasmine\.HtmlReporter\(\)/])
       end
     end
     context "reporterがPhantomJsの場合" do
@@ -43,15 +48,9 @@ describe Jasmine::SpecRunner do
         config.merge!({reporter: :phantomjs})
       end
       it "指定したファイルのspecを実行し、JUnit形式のXMLを出力するSpecRunner.htmlを生成する" do
-        expect(spec_runner.generate_spec_runner_html(targets)).to be_true
-
-        expect(File.exist?(dest_spec_runner)).to be_true
-        result = File.read(dest_spec_runner)
-        expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
-        expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
-        expect(result).to match(/new jasmine\.TrivialReporter\(\)/)
-        expect(result).to match(/new jasmine\.PhantomJSReporter\(\)/)
-        expect(result).to match(/lib\/jasmine-#{config[:jasmine_version]}\/jasmine\.phantomjs-reporter\.js/)
+        spec_runner_should_match([/new jasmine\.TrivialReporter\(\)/,
+                                  /new jasmine\.PhantomJSReporter\(\)/,
+                                  /lib\/jasmine-#{config[:jasmine_version]}\/jasmine\.phantomjs-reporter\.js/])
       end
     end
     context "reporterがHTMLでもPhantomJsでもない場合" do
@@ -59,13 +58,7 @@ describe Jasmine::SpecRunner do
         config.merge!({reporter: :hoge})
       end
       it "repoterがHTMLの場合と同じ結果を出力する" do
-        expect(spec_runner.generate_spec_runner_html(targets)).to be_true
-
-        expect(File.exist?(dest_spec_runner)).to be_true
-        result = File.read(dest_spec_runner)
-        expect(result).to match(/#{to_spec(targets[0]).sub(config[:src_dir], ".")}/)
-        expect(result).to match(/#{to_spec(targets[1]).sub(config[:src_dir], ".")}/)
-        expect(result).to match(/new jasmine\.HtmlReporter\(\)/)
+        spec_runner_should_match([/new jasmine\.HtmlReporter\(\)/])
       end
     end
 
@@ -113,6 +106,17 @@ describe Jasmine::SpecRunner do
         expect(File.exists?("#{lib_dir}/jasmine-#{config[:jasmine_version]}/jasmine.css")).to be_true
         result = File.read(dest_spec_runner)
         expect(result).to match(/jasmine-#{config[:jasmine_version]}\/jasmine.css/)
+      end
+    end
+
+    context "オプションでライブラリのディレクトリパスが設定されている場合" do
+      before do
+        config.merge!({lib: "spec/data/lib"})
+      end
+      it "ライブラリディレクトリ内に存在するjsファイルのscriptタグが記述されたSpecRunner.htmlが生成される" do
+        spec_runner_should_match([/<script src="spec\/data\/lib\/lib1\.js"><\/script>/,
+                                  /<script src="spec\/data\/lib\/lib2\.js"><\/script>/,
+                                  /<script src="spec\/data\/lib\/1\/lib\.js"><\/script>/])
       end
     end
   end
