@@ -10,6 +10,11 @@
   <% if @config.reporter == :phantomjs %>
   <script type="text/javascript" src="lib/jasmine-<%= @config.jasmine_version%>/jasmine.phantomjs-reporter.js"></script>
   <% end %>
+  <% unless @config[:lib].nil? %>
+  <% Dir.glob("#{@config.lib}/**/*.js").each{|path| %>
+  <script src="../<%= path %>"></script>
+  <% } %>
+  <% end %>
   <!-- include source files here... -->
   <% source_paths.each{|path| %>
   <script type="text/javascript" src="../<%= path %>"></script>
