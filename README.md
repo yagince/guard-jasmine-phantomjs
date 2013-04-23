@@ -48,6 +48,8 @@ And then execute:
       phantomjs: :gem
       # , out: 'src/all.js'
       # , root_script: 'src/root.ts'
+      # , reporter: :html
+      # , lib: 'lib'
     } do
       watch(%r{src/(.+?)\.ts$})
       watch(%r{spec/(.+?)\Spec.js$}){|m| "src/#{m[1]}.ts" }
@@ -62,7 +64,7 @@ And then execute:
   - `:typescript`
   - `:coffee` **# TODO**
 - jasmine_version: 
-  - your jasmine version.
+  - your jasmine's `version`.
 - src_dir: 
   - main source directory path 
 - spec_dir: 
@@ -73,6 +75,13 @@ And then execute:
   - add `--out` option when compile typescript
 - root_script: 
   - if you define this option, compile this file which files are changed.
+- reporter:
+  - `:html` (default)
+    - generate SpecRunner.html for `HtmlReporter` of jasmine
+  - `:phantomjs`
+    - generate SpecRunner.html for `PhantomJsReporter` of jasmine
+- lib:
+  - if you define this option, write `<script src="../xx/xx.js"></script>` all the js files in that directory.
 
 ### Run
 
