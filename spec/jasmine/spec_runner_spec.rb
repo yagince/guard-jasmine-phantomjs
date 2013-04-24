@@ -114,9 +114,9 @@ describe Jasmine::SpecRunner do
         config.merge!({lib: "spec/data/lib"})
       end
       it "ライブラリディレクトリ内に存在するjsファイルのscriptタグが記述されたSpecRunner.htmlが生成される" do
-        spec_runner_should_match([/<script src="spec\/data\/lib\/lib1\.js"><\/script>/,
-                                  /<script src="spec\/data\/lib\/lib2\.js"><\/script>/,
-                                  /<script src="spec\/data\/lib\/1\/lib\.js"><\/script>/])
+        spec_runner_should_match([/<script src="..\/spec\/data\/lib\/lib1\.js"><\/script>/,
+                                  /<script src="..\/spec\/data\/lib\/lib2\.js"><\/script>/,
+                                  /<script src="..\/spec\/data\/lib\/1\/lib\.js"><\/script>/])
       end
     end
   end
