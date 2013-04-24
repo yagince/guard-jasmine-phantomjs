@@ -23,11 +23,16 @@ module Guard
         private
         def notify(results)
           results.compact.each{|result|
+            type = failed_count(result) > 0 ? :failed : :success
             ::Guard::UI.info "Jasmine execute result."
-            Notifier.notify result 
+            Notifier.notify result, {image: type}
             puts results[0] + "\n" if result
           }
           results
+        end
+
+        def failed_count(result)
+          result.scan(/(\d+) failures/).map {|m| m.first.to_i }.inject(0, &:+)
         end
       end
     end
