@@ -30,7 +30,7 @@ module Guard
           results.each{|result|
             unless result.message.empty?
               ::Guard::UI.error "Compile Error!"
-              Notifier.notify result.message
+              Notifier.notify result.message, {image: :failed }
               puts "\x1b[31m#{result.message}\x1b[39m"
             end
           }
