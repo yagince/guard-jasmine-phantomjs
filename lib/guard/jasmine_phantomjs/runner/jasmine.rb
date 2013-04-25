@@ -25,7 +25,7 @@ module Guard
           results.compact.each{|result|
             ::Guard::UI.info "Jasmine execute result."
             type = failed_count(result) > 0 ? :failed : :success
-            Notifier.notify result, {image: type}
+            Notifier.notify plaintext(result), {image: type}
             puts results[0] + "\n" if result
           }
           results
@@ -33,6 +33,10 @@ module Guard
 
         def failed_count(result)
           result.scan(/(\d+) failures/).map{|m| m.first.to_i }.inject(:+)
+        end
+
+        def plaintext(result)
+          result.gsub(/\e\[\d+\m/, "")
         end
       end
     end
