@@ -32,7 +32,7 @@ module Guard
         end
 
         def failed_count(result)
-          result.scan(/(\d+) failures/).map{|m| m.first.to_i }.inject(:+)
+          result.scan(/(\d+) failures/).map{|m| m.first.to_i }.inject(0, :+)
         end
 
         def plaintext(result)
