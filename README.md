@@ -18,7 +18,7 @@ Add this line to your application's Gemfile:
 
 And then init:
 
-    $ bundle exec guard init jasmine_phantomjs
+    $ bundle exec guard init jasmine-phantomjs
 
 And then execute:
 
