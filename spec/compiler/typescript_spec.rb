@@ -55,7 +55,7 @@ describe Compiler::TypeScript do
   context "コンパイルエラーになる場合" do
     it "should be return error-result" do
       result = compiler.compile(invalid_ts_file)
-      expect(result.message).to match(/.+: Function declared a non-void return type, but has no return expression/)
+      expect(result.message).to match(/.+: Function 'a' declared a non-void return type, but has no return expression/)
       expect(result.status).to eq(:error)
     end
   end
