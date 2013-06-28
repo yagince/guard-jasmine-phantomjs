@@ -33,6 +33,7 @@ module Compiler
                    ""
                  end
       command << " #{@options[:compile_options]}" if @options[:compile_options]
+      command
     end
 
     def compile_with_gem(file_path)
